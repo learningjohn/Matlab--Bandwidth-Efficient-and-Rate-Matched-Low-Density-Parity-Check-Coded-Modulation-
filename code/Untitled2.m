@@ -30,6 +30,7 @@ I_I(i) = mutualinfo(P_I,sqrt(P/meanConstPower_I),ASK_symbol');
 I_Q(i) = mutualinfo(P_Q,sqrt(P/meanConstPower_Q),ASK_symbol');
 I(i) = I_I(i)+I_Q(i);
 C(i) = log2(1+P);
+
 end
 figure()
 plot(SNR_dB,C);hold on;plot(SNR_dB,I);plot(SNR_dB,I_mean);
