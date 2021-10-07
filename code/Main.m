@@ -1,4 +1,6 @@
 %不同信噪比下，计算ASK的I(x,y)最大的MB分布
+addpath("Compute_fun\");
+addpath("mat_data\");
 clc;clear;
 m_ASK = 4;              %ASK长度
 acit_ASK = 1:2:2^(m_ASK-1); 

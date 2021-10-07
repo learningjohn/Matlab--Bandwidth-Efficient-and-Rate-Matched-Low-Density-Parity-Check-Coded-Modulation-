@@ -1,4 +1,6 @@
 %使用图像信源与随机信源比较信道互信息熵
+addpath("Compute_fun\");
+addpath("mat_data\");
 clc;clear;
 % test_source = imread('lena512.bmp');
 test_source = imread('lena512color.tiff');

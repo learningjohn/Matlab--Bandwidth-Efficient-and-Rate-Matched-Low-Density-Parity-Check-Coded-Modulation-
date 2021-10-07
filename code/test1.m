@@ -1,4 +1,6 @@
 %通过ASK的最优分布求得QAM的分布，并比较平均分布在AWGN信道下的性能
+addpath("Compute_fun\");
+addpath("mat_data\");
 clc;clear;
 load('best_P_8ASK.mat');
 addpath('ccdm\');
