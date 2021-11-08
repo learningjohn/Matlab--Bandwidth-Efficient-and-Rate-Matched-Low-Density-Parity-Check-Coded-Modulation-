@@ -1,4 +1,5 @@
 %通过ASK的最优分布求得QAM的分布，并比较平均分布在AWGN信道下的性能
+clc;clear;
 addpath("Compute_fun\");
 addpath("mat_data\");
 clc;clear;
@@ -15,6 +16,7 @@ variance=N0;
 Standard_variance=sqrt(variance);
 Fer1 = zeros(1,length(EsN0));
 Fer2= zeros(1,length(EsN0));
+QAM_dmat = (repmat([-sqrt(M)+1:2:sqrt(M)-1],sqrt(M),1)./2).^2 + (repmat([sqrt(M)-1:-2:-sqrt(M)+1]',1,sqrt(M))./2).^2;
 for i =1:length(EsN0dB)
     pOpt = PX(i,:)'*PX(i,:);
     pOpt = pOpt(:);
@@ -35,7 +37,19 @@ for i =1:length(EsN0dB)
     R_C = qamdemod(y,M,'bin','UnitAveragePower',true);
     Fer1(i) = sum(R_C ~= txSyms)/nSyms;
 
+    A =sum(sum( QAM_dmat.*(PX(i,:)'*PX(i,:))));
+    
+    ErrA = erfc(sqrt(EsN0(i)/(4*A)))-(0.5*erfc(sqrt(EsN0(i)/(4*A))))^2;
+    ErrB = (3/2)*erfc(sqrt(EsN0(i)/(4*A)))-2*(0.5*erfc(sqrt(EsN0(i)/(4*A))))^2;
+    ErrC = 2*erfc(sqrt(EsN0(i)/(4*A)))-4*(0.5*erfc(sqrt(EsN0(i)/(4*A))))^2;
+    
+    matrix_err = [[ErrA;ones(sqrt(M)-2,1)*ErrB;ErrA],repmat([ErrB;ones(sqrt(M)-2,1)*ErrC;ErrB],1,sqrt(M)-2),[ErrA;ones(sqrt(M)-2,1)*ErrB;ErrA]];
+    SER_best(i) = sum(sum(matrix_err.*(PX(i,:)'*PX(i,:))));
 end
 [BER,SER] = berawgn(EsN0dB-10*log10(log2(M)),'qam',M);
-semilogy(EsN0dB,Fer1,'k');hold on;
+figure()
+semilogy(EsN0dB,Fer1,'-*k');hold on;
 semilogy(EsN0dB,SER,'b');
+semilogy(EsN0dB,SER_best,'-+r');
+ylabel('误帧率');xlabel('信噪比（EsN0）')
+legend('MB分布仿真误码率','均匀分布理论误码率','MB分布理论误码率')
