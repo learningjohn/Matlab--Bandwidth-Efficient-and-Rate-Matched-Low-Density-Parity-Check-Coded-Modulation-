@@ -3,8 +3,8 @@
 addpath("Compute_fun\");
 addpath("mat_data\");
 clc;clear;
-m_ASK = 4;              %ASK长度
-acit_ASK = 1:2:2^(m_ASK-1); 
+m_ASK = 5;              %ASK长度
+acit_ASK = 1:2:2^(m_ASK); 
 ASK_symbol = [-acit_ASK(end:-1:1),acit_ASK];%ASK星座点
 max_pow = mean(abs(ASK_symbol).^2);
 min_pow = 1;
@@ -12,10 +12,10 @@ min_pow = 1;
 err_min = 0.000000001;    %最小误差
 a = 0.618;b=1-a;    
 err = 1;
-SNR_dB =0:0.5:25;      
+SNR_dB =0:1:35;      
 for i =1:length(SNR_dB)
          
-P=10.^(SNR_dB(i)/10);  %信号功率，默认噪声功率为0
+P=10.^(SNR_dB(i)/10);  %信号功率，默认噪声功率为1
 count = 0;
 delta_range = [sqrt(P/max_pow),sqrt(P/min_pow)];
 err = 1;
