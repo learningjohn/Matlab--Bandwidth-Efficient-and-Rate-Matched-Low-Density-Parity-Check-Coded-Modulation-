@@ -41,7 +41,7 @@
 
 % choose aribtray target distribution and output length
 pOpt = [0.0,0.2,0.3,0.5];
-n = 10;
+n = 1000;
 % calculate  input length m, and the optimal n-type approximation 
 [p_quant,num_info_bits,n_i] = ccdm.initialize(pOpt,n)
 
