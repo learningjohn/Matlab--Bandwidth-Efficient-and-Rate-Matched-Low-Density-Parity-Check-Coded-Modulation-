@@ -3,7 +3,7 @@
 addpath("Compute_fun\");
 addpath("mat_data\");
 clc;clear;
-m_ASK = 5;              %ASK长度
+m_ASK = 3;              %ASK长度
 acit_ASK = 1:2:2^(m_ASK); 
 ASK_symbol = [-acit_ASK(end:-1:1),acit_ASK];%ASK星座点
 max_pow = mean(abs(ASK_symbol).^2);
