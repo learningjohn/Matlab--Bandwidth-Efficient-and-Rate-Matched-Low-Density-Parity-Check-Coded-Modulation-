@@ -37,19 +37,24 @@ for i =1:length(EsN0dB)
     R_C = qamdemod(y,M,'bin','UnitAveragePower',true);
     Fer1(i) = sum(R_C ~= txSyms)/nSyms;
 
-    A =sum(sum( QAM_dmat.*(PX(i,:)'*PX(i,:))));
+    src_symbols_hat = ccdm.decode(txSyms',n_i,nBitsInfo);
+    Ber1(i) = sum(src_symbols_hat ~= txBits)/length(src_symbols_hat);
     
-    ErrA = erfc(sqrt(EsN0(i)/(4*A)))-(0.5*erfc(sqrt(EsN0(i)/(4*A))))^2;
-    ErrB = (3/2)*erfc(sqrt(EsN0(i)/(4*A)))-2*(0.5*erfc(sqrt(EsN0(i)/(4*A))))^2;
-    ErrC = 2*erfc(sqrt(EsN0(i)/(4*A)))-4*(0.5*erfc(sqrt(EsN0(i)/(4*A))))^2;
+    SER_best(i) = QAM_theorySer(PX(i,:)'*PX(i,:),EsN0dB(i),M);
     
-    matrix_err = [[ErrA;ones(sqrt(M)-2,1)*ErrB;ErrA],repmat([ErrB;ones(sqrt(M)-2,1)*ErrC;ErrB],1,sqrt(M)-2),[ErrA;ones(sqrt(M)-2,1)*ErrB;ErrA]];
-    SER_best(i) = sum(sum(matrix_err.*(PX(i,:)'*PX(i,:))));
 end
 [BER,SER] = berawgn(EsN0dB-10*log10(log2(M)),'qam',M);
+
 figure()
 semilogy(EsN0dB,Fer1,'-*k');hold on;
 semilogy(EsN0dB,SER,'b');
-semilogy(EsN0dB,SER_best,'-+r');
+semilogy(EsN0dB,SER_best,'-+r');hold off
 ylabel('误帧率');xlabel('信噪比（EsN0）')
 legend('MB分布仿真误码率','均匀分布理论误码率','MB分布理论误码率')
+
+% 
+% figure()
+% semilogy(EsN0dB,BER,'-*k');hold on;
+% semilogy(EsN0dB,Ber1,'b');hold off
+% ylabel('误帧率');xlabel('信噪比（EsN0）')
+% legend('MB分布仿真误码率','均匀分布理论误码率')
