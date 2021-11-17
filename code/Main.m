@@ -3,7 +3,7 @@
 addpath("Compute_fun\");
 addpath("mat_data\");
 clc;clear;
-m_ASK = 3;              %ASK长度
+m_ASK = 4;              %ASK长度
 acit_ASK = 1:2:2^(m_ASK); 
 ASK_symbol = [-acit_ASK(end:-1:1),acit_ASK];%ASK星座点
 max_pow = mean(abs(ASK_symbol).^2);
@@ -12,7 +12,7 @@ min_pow = 1;
 err_min = 0.000000001;    %最小误差
 a = 0.618;b=1-a;    
 err = 1;
-SNR_dB =0:1:35;      
+SNR_dB =0:1:30;      
 for i =1:length(SNR_dB)
          
 P=10.^(SNR_dB(i)/10);  %信号功率，默认噪声功率为1
@@ -48,6 +48,8 @@ I(i) = mutualinfo(PX(i,:),delta_left,ASK_symbol);
 I_mean(i) = mutualinfo(ones(1,length(ASK_symbol))/length(ASK_symbol),sqrt(P/max_pow),ASK_symbol);
 C(i) = log2(1+P)/2;
 end
+figure()
 plot(SNR_dB,C);hold on;plot(SNR_dB,I);plot(SNR_dB,I_mean);
 legend('信道容量','最优分布互信息量','平均分布互信息量')
-% save best_P_8ASK.mat PX
+filename = ['best_P_',num2str(2^m_ASK),'ASK.mat'];
+save(filename,'PX')
