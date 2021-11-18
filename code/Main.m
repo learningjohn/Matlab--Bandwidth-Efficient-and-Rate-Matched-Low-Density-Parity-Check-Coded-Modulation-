@@ -44,7 +44,7 @@ end
 delta = (delta_left+delta_right)/2;
 v= Mid_way(delta,P,ASK_symbol);
 PX(i,:) = PXv(ASK_symbol,v,ASK_symbol);
-I(i) = mutualinfo(PX(i,:),delta_left,ASK_symbol);
+I(i) = mutualinfo(PX(i,:),delta,ASK_symbol);
 I_mean(i) = mutualinfo(ones(1,length(ASK_symbol))/length(ASK_symbol),sqrt(P/max_pow),ASK_symbol);
 C(i) = log2(1+P)/2;
 end
