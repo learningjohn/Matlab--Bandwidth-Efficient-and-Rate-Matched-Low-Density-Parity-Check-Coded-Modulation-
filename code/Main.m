@@ -51,5 +51,5 @@ end
 figure()
 plot(SNR_dB,C);hold on;plot(SNR_dB,I);plot(SNR_dB,I_mean);
 legend('信道容量','最优分布互信息量','平均分布互信息量')
-filename = ['best_P_',num2str(2^m_ASK),'ASK.mat'];
-save(filename,'PX')
+filename_bestP = ['best_P_',num2str(2^m_ASK),'ASK.mat'];
+save(filename_bestP,'PX')
