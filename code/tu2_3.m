@@ -1,7 +1,7 @@
 addpath("Compute_fun\");
 addpath("mat_data\");
 clc;clear;
-m_ASK = 3;              %ASK长度
+m_ASK = 1:4;              %ASK长度
 SNR_dB =0:1:30;     
 figure()
 hold on;
@@ -14,11 +14,11 @@ for i=1:length(m_ASK)
     for j =1:length(SNR_dB)
         P=10.^(SNR_dB(j)/10);  %信号功率，默认噪声功率为1
         delta = sqrt(P/(ASK_symbol.^2*PX(j,:)'));
-        I(j) = mutualinfo(PX(i,:),delta,ASK_symbol);
+        I(j) = mutualinfo(PX(j,:),delta,ASK_symbol);
         I_mean(j) = mutualinfo(ones(1,length(ASK_symbol))/length(ASK_symbol),sqrt(P/max_pow),ASK_symbol);
         C(j) = log2(1+P)/2;
     end
-    plot(SNR_dB,I);plot(SNR_dB,I_mean);
+    plot(SNR_dB,I,'k');plot(SNR_dB,I_mean,'k');
     clear PX 
 end
-plot(SNR_dB,C);hold off;
+plot(SNR_dB,C,'r','LineWidth',1);hold off;
