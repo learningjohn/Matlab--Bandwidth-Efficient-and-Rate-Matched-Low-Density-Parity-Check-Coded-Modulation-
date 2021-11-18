@@ -2,7 +2,7 @@ addpath("Compute_fun\");
 addpath("mat_data\");
 clc;clear;
 m_ASK = 1:4;              %ASK³¤¶È
-SNR_dB =0:1:30;     
+SNR_dB =0:1:35;     
 figure()
 hold on;
 for i=1:length(m_ASK)
@@ -18,7 +18,7 @@ for i=1:length(m_ASK)
         I_mean(j) = mutualinfo(ones(1,length(ASK_symbol))/length(ASK_symbol),sqrt(P/max_pow),ASK_symbol);
         C(j) = log2(1+P)/2;
     end
-    plot(SNR_dB,I,'k');plot(SNR_dB,I_mean,'k');
+    plot(SNR_dB,I,'-r','LineWidth',1);plot(SNR_dB,I_mean,'k','LineWidth',1);
     clear PX 
 end
-plot(SNR_dB,C,'r','LineWidth',1);hold off;
+plot(SNR_dB,C,'--k','LineWidth',2);hold off;
