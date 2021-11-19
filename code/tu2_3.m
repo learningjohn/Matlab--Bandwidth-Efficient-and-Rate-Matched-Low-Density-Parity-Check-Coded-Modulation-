@@ -1,3 +1,5 @@
+%计算2，3，8，16ASM的最优互信息量，并于平均互信息量相比较
+
 addpath("Compute_fun\");
 addpath("mat_data\");
 clc;clear;
