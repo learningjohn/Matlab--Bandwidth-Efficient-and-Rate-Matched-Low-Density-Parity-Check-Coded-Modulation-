@@ -1,5 +1,5 @@
-%不同信噪比下，计算ASK的I(x,y)最大的MB分布
-%
+%不同信噪比下，计算不同调制阶数ASK的I(x,y)最优的MB分布
+%运行结束后保存分布PX
 addpath("Compute_fun\");
 addpath("mat_data\");
 clc;clear;
