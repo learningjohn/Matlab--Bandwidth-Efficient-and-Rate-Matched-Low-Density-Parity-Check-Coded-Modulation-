@@ -4,7 +4,7 @@ addpath("Compute_fun\");
 addpath("mat_data\");
 load('best_P_8ASK.mat');
 addpath('ccdm\');
-EsN0dB =0:1:25;
+EsN0dB =8:0.1:18;
 M=64;
 QAM_symbol = qammod(0:M-1,M,'bin','UnitAveragePower',true).';
 nSyms = 100000;
@@ -28,13 +28,15 @@ for i =1:length(EsN0dB)
     SER_meanMB(i) = Px_theoryfun(EsN0(i),A_test,M);
     %带入推导公式的MB分布理论误符号率
     SER_best(i) = QAM_theorySer(p_test,EsN0dB(i),M);
-    
+    %均匀分布带入推导公式计算
+    SER_mean(i) = QAM_theorySer(ones(sqrt(M),sqrt(M))/M,EsN0dB(i),M);
 end
+%maltab自带的理论误码率公式
 [BER,SER] = berawgn(EsN0dB-10*log10(log2(M)),'qam',M);
 
 figure()
-semilogy(EsN0dB,SER,'-*k','LineWidth',2,'MarkerSize',10);hold on;
-semilogy(EsN0dB,SER_meanMB,'-ob','LineWidth',2,'MarkerSize',10);
-semilogy(EsN0dB,SER_best,'-+r','LineWidth',2,'MarkerSize',10);hold off
+semilogy(EsN0dB,SER,'-k');hold on;
+semilogy(EsN0dB,SER_meanMB,'-b');
+semilogy(EsN0dB,SER_best,'-r');hold off
 ylabel('Ser');xlabel('信噪比（EsN0）')
 legend('均匀分布理论误符号率','带入均匀分布公式的MB分布理论误符号率','MB分布理论误符号率','FontSize',10);
