@@ -3,7 +3,7 @@
 addpath("Compute_fun\");
 addpath("mat_data\");
 clc;clear;
-m_ASK = 4;              %ASK长度
+m_ASK = 3;              %ASK长度
 acit_ASK = 1:2:2^(m_ASK); 
 ASK_symbol = [-acit_ASK(end:-1:1),acit_ASK];%ASK星座点
 max_pow = mean(abs(ASK_symbol).^2);
@@ -51,5 +51,5 @@ end
 figure()
 plot(SNR_dB,C);hold on;plot(SNR_dB,I);plot(SNR_dB,I_mean);
 legend('信道容量','最优分布互信息量','平均分布互信息量')
-filename_bestP = ['best_P_',num2str(2^m_ASK),'ASK.mat'];
-save(filename_bestP,'PX')
+% filename_bestP = ['best_P_',num2str(2^m_ASK),'ASK.mat'];
+% save(filename_bestP,'PX')

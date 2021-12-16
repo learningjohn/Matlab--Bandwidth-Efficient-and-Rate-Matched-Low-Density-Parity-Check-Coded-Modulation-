@@ -3,7 +3,7 @@
 addpath("Compute_fun\");
 addpath("mat_data\");
 clc;clear;
-m_ASK = 1:4;              %ASK长度
+m_ASK = 3;              %ASK长度
 SNR_dB =0:1:35;     
 figure()
 hold on;
@@ -24,3 +24,6 @@ for i=1:length(m_ASK)
     clear PX 
 end
 plot(SNR_dB,C,'--k','LineWidth',2);hold off;
+    parfor j =1:length(SNR_dB)
+        I_QAM_mean(j) = mutualinfo_QAM(ones(8,8)/(8^2),SNR_dB(j),8^2);
+    end

@@ -2,7 +2,6 @@
 clc;clear;
 addpath("Compute_fun\");
 addpath("mat_data\");
-clc;clear;
 load('best_P_8ASK.mat');
 addpath('ccdm\');
 EsN0dB =0:1:25;
@@ -17,8 +16,10 @@ Standard_variance=sqrt(variance);
 Fer1 = zeros(1,length(EsN0));
 Fer2= zeros(1,length(EsN0));
 QAM_dmat = (repmat([-sqrt(M)+1:2:sqrt(M)-1],sqrt(M),1)./2).^2 + (repmat([sqrt(M)-1:-2:-sqrt(M)+1]',1,sqrt(M))./2).^2;
+p_test = PX(13,:)'*PX(13,:);
 for i =1:length(EsN0dB)
-    pOpt = PX(i,:)'*PX(i,:);
+%     pOpt = PX(i,:)'*PX(i,:);
+    pOpt = p_test;
     pOpt = pOpt(:);
     [p_quant,nBitsInfo,n_i] = ccdm.initialize(pOpt,nSyms);
     
@@ -40,7 +41,7 @@ for i =1:length(EsN0dB)
     src_symbols_hat = ccdm.decode(R_C',n_i,nBitsInfo);
     Ber1(i) = sum(src_symbols_hat ~= txBits)/length(src_symbols_hat);
     
-    SER_best(i) = QAM_theorySer(PX(i,:)'*PX(i,:),EsN0dB(i),M);
+    SER_best(i) = QAM_theorySer(p_test,EsN0dB(i),M);
     
 end
 [BER,SER] = berawgn(EsN0dB-10*log10(log2(M)),'qam',M);
