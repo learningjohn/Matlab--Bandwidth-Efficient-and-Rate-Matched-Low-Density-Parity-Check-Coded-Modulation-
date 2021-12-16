@@ -11,13 +11,13 @@ min_pow = 1;
 % delta_range = [0,10]; %黄金分割法范围
 err_min = 0.000000001;    %最小误差
 a = 0.618;b=1-a;
-for i = length(snr)
+for i = 1:length(snr)
     if any(snr(i)==snr_exit)
         Px(i,:) = Px_exit(snr(i)==snr_exit,:);
     else
 
         SNR_dB =snr(i);
-        P=10.^(SNR_dB(i)/10);  %信号功率，默认噪声功率为1
+        P=10.^(SNR_dB/10);  %信号功率，默认噪声功率为1
         count = 0;
         delta_range = [sqrt(P/max_pow),sqrt(P/min_pow)];
         err = 1;
