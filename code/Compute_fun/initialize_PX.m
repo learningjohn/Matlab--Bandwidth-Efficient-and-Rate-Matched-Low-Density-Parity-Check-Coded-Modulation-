@@ -1,5 +1,6 @@
 function [Px] = initialize_PX(snr,M_ASK)
-%UNTITLED 此处显示有关此函数的摘要
+%初始化当前仿真信噪比SNR对应的最优分布，如果文件存储的概率没有对应的信噪比分布
+%则重新计算并更新存储文件
 %   此处显示详细说明
 filename_bestP = ['snr_bestP_',num2str(M_ASK),'ASK.mat'];
 load(['mat_data/',filename_bestP]);
@@ -44,7 +45,7 @@ for i = 1:length(snr)
 
     end
 end
-save(['mat_data/',filename_bestP],snr_Px);
+save(['mat_data/',filename_bestP],'snr_Px');
 
 end
 
