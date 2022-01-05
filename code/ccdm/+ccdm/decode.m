@@ -39,10 +39,10 @@
 % [1] http://arxiv.org/abs/1503.05133
 
 function src_symbols = decode(code_symbols,n_i,num_info_bits)
-    n_i_soll = hist(code_symbols+1,1:1:length(n_i));
-    if all(n_i_soll(:) == n_i(:))
+%     n_i_soll = hist(code_symbols+1,1:1:length(n_i));
+%     if all(n_i_soll(:) == n_i(:))
         src_symbols = double(ccdm.decodeCCADM(int32(code_symbols+1), int32(n_i), int32(num_info_bits)));
-    else %in case Type-Constraint is not matched, output zero sequence
-        src_symbols = zeros(1,num_info_bits);
-    end
+%     else %in case Type-Constraint is not matched, output zero sequence
+%         src_symbols = zeros(1,num_info_bits);
+%     end
 end

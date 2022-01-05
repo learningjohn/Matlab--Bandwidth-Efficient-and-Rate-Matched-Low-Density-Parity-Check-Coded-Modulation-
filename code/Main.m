@@ -1,53 +1,79 @@
-%不同信噪比下，计算ASK的I(x,y)最大的MB分布
-%
+%通过ASK的最优分布求得QAM的分布，并比较平均分布在AWGN信道下的性能
+clc;clear;
 addpath("Compute_fun\");
 addpath("mat_data\");
-clc;clear;
-m_ASK = 3;              %ASK长度
-acit_ASK = 1:2:2^(m_ASK); 
+load('best_P_8ASK.mat');
+addpath('ccdm\');
+EsN0dB =0:1:25;
+M=64;
+QAM_symbol = qammod(0:M-1,M,'bin','UnitAveragePower',true).';
+nSyms = 100000;
+EsN0=10.^(EsN0dB/10);
+Es=1;
+N0=Es./EsN0;
+variance=N0;
+Standard_variance=sqrt(variance);
+Fer1 = zeros(1,length(EsN0));
+Fer2= zeros(1,length(EsN0));
+QAM_dmat = (repmat([-sqrt(M)+1:2:sqrt(M)-1],sqrt(M),1)./2).^2 + (repmat([sqrt(M)-1:-2:-sqrt(M)+1]',1,sqrt(M))./2).^2;
+p_test = PX(13,:)'*PX(13,:);
+for i =1:length(EsN0dB)
+%     pOpt = PX(i,:)'*PX(i,:);
+    pOpt = p_test;
+    pOpt = pOpt(:);
+    [p_quant,nBitsInfo,n_i] = ccdm.initialize(pOpt,nSyms);
+    
+    meanConstPower = sum(abs(QAM_symbol).^2.*p_quant);
+    txBits = randi(2,1,nBitsInfo)-1;
+    i_TX=ccdm.encode(txBits(1,:),n_i).'+1;
+    txSyms = i_TX-1;
+    IQ = QAM_symbol(i_TX);
+    Es = meanConstPower;
+    N0=Es./EsN0(i);
+    variance=N0;
+    Standard_variance1=sqrt(variance);
+    n=(randn(1,nSyms).'+1i*randn(1,nSyms).')./sqrt(2);
+    n_w=Standard_variance1*n;
+    y = IQ+n_w;
+    R_C = qamdemod(y,M,'bin','UnitAveragePower',true);
+    Fer1(i) = sum(R_C ~= txSyms)/nSyms;
+    
+    src_symbols_hat = ccdm.decode(R_C',n_i,nBitsInfo);
+    Ber1(i) = sum(src_symbols_hat ~= txBits)/length(src_symbols_hat);
+    
+    SER_best(i) = QAM_theorySer(p_test,EsN0dB(i),M);
+    
+end
+[BER,SER] = berawgn(EsN0dB-10*log10(log2(M)),'qam',M);
+
+figure()
+semilogy(EsN0dB,Fer1,'-*k');hold on;
+semilogy(EsN0dB,SER,'b');
+semilogy(EsN0dB,SER_best,'-+r');hold off
+ylabel('误帧率');xlabel('信噪比（EsN0）')
+legend('MB分布仿真误码率','均匀分布理论误码率','MB分布理论误码率')
+
+%
+figure()
+semilogy(EsN0dB,BER,'-*k');hold on;
+semilogy(EsN0dB,Ber1,'b');hold off
+ylabel('误帧率');xlabel('信噪比（EsN0）')
+legend('MB分布仿真误码率','均匀分布理论误码率')
+
+acit_ASK = 1:2:sqrt(M);
 ASK_symbol = [-acit_ASK(end:-1:1),acit_ASK];%ASK星座点
 max_pow = mean(abs(ASK_symbol).^2);
-min_pow = 1;
-% delta_range = [0,10]; %黄金分割法范围
-err_min = 0.000000001;    %最小误差
-a = 0.618;b=1-a;    
-err = 1;
-SNR_dB =0:1:35;      
-for i =1:length(SNR_dB)
-         
-P=10.^(SNR_dB(i)/10);  %信号功率，默认噪声功率为1
-count = 0;
-delta_range = [sqrt(P/max_pow),sqrt(P/min_pow)];
-err = 1;
-while abs(err)>err_min
-    delta_left =delta_range(1)+ (delta_range(2)-delta_range(1))*b;
-    delta_right = delta_range(1) + (delta_range(2)-delta_range(1))*a;
-    v_1 = Mid_way(delta_left,P,ASK_symbol);
-    v_2 = Mid_way(delta_right,P,ASK_symbol);
-    if any([v_1,v_2] < 0)
-        flag = 1;
-    end
-    PX_left = PXv(ASK_symbol,v_1,ASK_symbol);
-    PX_right = PXv(ASK_symbol,v_2,ASK_symbol); 
-    I_left = mutualinfo(PX_left,delta_left,ASK_symbol);
-    I_right = mutualinfo(PX_right,delta_right,ASK_symbol);
-    err = I_left - I_right;
-    if err>0
-        delta_range(2) = delta_right;
-   
-    else
-         delta_range(1) = delta_left;
-    end
-    count = count+1
-
+for j =1:length(EsN0dB)
+    P=10.^(EsN0dB(j)/10);  %信号功率，默认噪声功率为1
+    delta = sqrt(P/(ASK_symbol.^2*PX(j,:)'));
+    I(j) = mutualinfo(PX(j,:),delta,ASK_symbol);
+    I_mean(j) = mutualinfo(ones(1,length(ASK_symbol))/length(ASK_symbol),sqrt(P/max_pow),ASK_symbol);
+    C(j) = log2(1+P)/2;
 end
-delta = (delta_left+delta_right)/2;
-v= Mid_way(delta,P,ASK_symbol);
-PX(i,:) = PXv(ASK_symbol,v,ASK_symbol);
-I(i) = mutualinfo(PX(i,:),delta_left,ASK_symbol);
-I_mean(i) = mutualinfo(ones(1,length(ASK_symbol))/length(ASK_symbol),sqrt(P/max_pow),ASK_symbol);
-C(i) = log2(1+P)/2;
-end
-plot(SNR_dB,C);hold on;plot(SNR_dB,I);plot(SNR_dB,I_mean);
-legend('信道容量','最优分布互信息量','平均分布互信息量')
-% save best_P_8ASK.mat PX
+figure()
+hold on;
+plot(EsN0dB,I*2,'-r','LineWidth',1);
+plot(EsN0dB,I_mean*2,'k','LineWidth',1);
+plot(EsN0dB,C*2,'--k','LineWidth',2);hold off;
+xlabel('EsN0');ylabel('Rate');title('64QAM')
+legend('最优分布互信息量','平均分布互信息量','信道容量');
