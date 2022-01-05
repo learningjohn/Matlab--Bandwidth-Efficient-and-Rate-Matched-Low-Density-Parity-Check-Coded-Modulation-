@@ -2,10 +2,10 @@
 clc;clear;
 addpath("Compute_fun\");
 addpath("mat_data\");
-load('best_P_8ASK.mat');
+load('best_P_4ASK.mat');
 addpath('ccdm\');
-EsN0dB =0:1:25;
-M=64;
+EsN0dB =0:1:10;
+M=16;
 QAM_symbol = qammod(0:M-1,M,'bin','UnitAveragePower',true).';
 nSyms = 100000;
 EsN0=10.^(EsN0dB/10);
