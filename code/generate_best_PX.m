@@ -3,16 +3,16 @@
 addpath("Compute_fun\");
 addpath("mat_data\");
 clc;clear;
-m_ASK = 3;              %ASK长度
-acit_ASK = 1:2:2^(m_ASK); 
-ASK_symbol = [-acit_ASK(end:-1:1),acit_ASK];%ASK星座点
+m_ASK = 16;              %ASK长度
+ASK_half = 1:2:(m_ASK); 
+ASK_symbol = [-ASK_half(end:-1:1),ASK_half];%ASK星座点
 max_pow = mean(abs(ASK_symbol).^2);
 min_pow = 1;
 % delta_range = [0,10]; %黄金分割法范围
 err_min = 0.000000001;    %最小误差
 a = 0.618;b=1-a;    
 err = 1;
-SNR_dB =0:1:35;      
+SNR_dB =0:1:30;      
 for i =1:length(SNR_dB)
          
 P=10.^(SNR_dB(i)/10);  %信号功率，默认噪声功率为1
@@ -45,11 +45,13 @@ delta = (delta_left+delta_right)/2;
 v= Mid_way(delta,P,ASK_symbol);
 PX(i,:) = PXv(ASK_symbol,v,ASK_symbol);
 I(i) = mutualinfo(PX(i,:),delta,ASK_symbol);
+H(i) = -(log2(PX(i,:))*PX(i,:)');
 I_mean(i) = mutualinfo(ones(1,length(ASK_symbol))/length(ASK_symbol),sqrt(P/max_pow),ASK_symbol);
 C(i) = log2(1+P)/2;
 end
 figure()
-plot(SNR_dB,C);hold on;plot(SNR_dB,I);plot(SNR_dB,I_mean);
+hold on;grid on;
+plot(SNR_dB,C);plot(SNR_dB,I);plot(SNR_dB,I_mean);plot(SNR_dB,H);
 legend('信道容量','最优分布互信息量','平均分布互信息量')
 % filename_bestP = ['best_P_',num2str(2^m_ASK),'ASK.mat'];
 % save(filename_bestP,'PX')
