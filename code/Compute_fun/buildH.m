@@ -1,5 +1,7 @@
 function [ H, Z ] = buildH( n, R )
 %BUILDH Creates the parity check matrix H (reading the prototype from file)
+%ÒýÓÃ×Ôgithub 
+%https://github.com/simgunz/802.11n-ldpc
 % for codeword length n and rate R
 
 Zsize = [27, 54, 81];   % Square submatrices available size
