@@ -91,7 +91,7 @@ for k = 1:nSim
         noise=randn(1,n_ASK).';
         %AWGN
         Rx_I = out_Tx_I + Standard_variance1.*noise;
-        
+        llr_I = zeros(n_ASK,n);
         for j = 1:n
             %I路各比特位LLR
             %PS
@@ -111,6 +111,7 @@ for k = 1:nSim
         Rx_decodData_I_bit = ldpcDecoder(llr_I_ldpc);
         Rx_decodData_I_bit_I = reshape(Rx_decodData_I_bit(1:length(data_I_bit),1),n-1,[])';
         %解交织
+         Rx_pimap_I_Bit = zeros(n_ASK,n-1);
         Rx_pimap_I_Bit(:,bit_map_pi) = Rx_decodData_I_bit_I;
         %逆映射
         i_RX = Bin2Gray_map(bi2de(Rx_pimap_I_Bit,'left-msb')+1)';
