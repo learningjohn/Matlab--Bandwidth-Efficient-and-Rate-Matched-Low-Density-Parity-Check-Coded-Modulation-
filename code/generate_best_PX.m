@@ -62,7 +62,10 @@ plot(SNR_dB,H1);
 plot(SNR_dB,H1+1/6);
 % plot(SNR_dB,R*2/3);
 legend('信道容量','最优分布互信息量','2/3编码信息熵','3/4编码信息熵')
-% filename_bestP = ['best_P_',num2str(2^m_ASK),'ASK.mat'];
-% save(filename_bestP,'PX')
+%  filename_bestP = ['best_P_',num2str(m_ASK),'ASK.mat'];
+%  save(filename_bestP,'PX')
+%snr_Px = [SNR_dB',PX];
+% filename_snrbestP = ['snr_bestP_',num2str(m_ASK),'ASK.mat'];
+%save(filename_snrbestP,'snr_Px')
 %根据拟合得到的数据,32ASK,编码码率为5/6时，实际码率对应的信噪比
 R_SNR = [3,15.3;3.1,16.4;3.2,17.6;3.3,18.8;3.4,20;3.5,21.1;3.6,22.3;3.7,23.5;3.8,24.7;3.9,26.1;];
