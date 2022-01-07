@@ -62,6 +62,7 @@ plot(SNR_dB,H1);
 plot(SNR_dB,H1+1/6);
 % plot(SNR_dB,R*2/3);
 legend('信道容量','最优分布互信息量','2/3编码信息熵','3/4编码信息熵')
+hold off;
 %  filename_bestP = ['best_P_',num2str(m_ASK),'ASK.mat'];
 %  save(filename_bestP,'PX')
 %snr_Px = [SNR_dB',PX];
