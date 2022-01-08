@@ -5,9 +5,9 @@ M = 32;
 n = log2(M);
 M_ASK = 2^(n);
 R = 5/6;
-nSim = 10000;
+nSim = 1000;
 %编码相关参数
-snr = 18:0.2:19;     %信噪比
+snr = 18.8;     %信噪比
 load('R_SNR.mat');
 EsN0=10.^(snr/10);
 LDPC_bitlength = 64800; %码长可在648，1296   1944，64800中选择
@@ -49,7 +49,7 @@ Gray_table_map_bin = bi2de(Gray_table','left-msb')';
 xx = 1:length(Gray_table_map_bin);
 Gray_table_map(Gray_table_map_bin+1) = xx;
 
-best_P = initialize_PX(R_SNR(1,2),M_ASK);
+best_P = initialize_PX(R_SNR(1,2)+0.1,M_ASK);
 P = @(y,a,d,px) exp(-(y-a).^2./(2*d^2)) *px';
 
 for ii = 1:length(snr) 
@@ -84,9 +84,9 @@ for k = 1:nSim
         sign_symbol_I = encData_I_bit(length(data_I_bit)+1:end)*2-1;
         out_Tx_I = ASK_map(i_TX)'.*sign_symbol_I;
         
-         Es = mean(abs(out_Tx_I).^2);
-        N0=Es./EsN0(ii);
-        variance=N0/2;
+        Es = mean(abs(out_Tx_I).^2);
+        N=Es./EsN0(ii);
+        variance=N;
         Standard_variance1=sqrt(variance);
         noise=randn(1,n_ASK).';
         %AWGN
@@ -95,8 +95,8 @@ for k = 1:nSim
         for j = 1:n
             %I路各比特位LLR
             %PS
-            llr_I(:,j) = log(P(Rx_I,ASK(Gray_table(j,:)==0),Standard_variance1/sqrt(2),best_P(Gray_table(j,:)==0))./...
-                             P(Rx_I,ASK(Gray_table(j,:)==1),Standard_variance1/sqrt(2),best_P(Gray_table(j,:)==1)));
+            llr_I(:,j) = log(P(Rx_I,ASK(Gray_table(j,:)==0),Standard_variance1,best_P(Gray_table(j,:)==0))./...
+                             P(Rx_I,ASK(Gray_table(j,:)==1),Standard_variance1,best_P(Gray_table(j,:)==1)));
             
         end
         
@@ -120,12 +120,21 @@ for k = 1:nSim
         rxBits_other = Rx_decodData_I_bit(length(data_I_bit)+1:end)';
         
         if any(Rx_decodData_I_bit~=data_I_bit_all) 
-            nerr =  nerr +1;
+            nerr(k) =  1;
         end
-        nerr_bit =  nerr_bit + sum(rxBits_I~=txBits_I) + sum(rxBits_other~=txBits_other);
+        nerr_bit(k) =   sum(rxBits_I~=txBits_I) + sum(rxBits_other~=txBits_other);
 
 end
-    biterr_rate(ii) = nerr_bit/((nBitsInfo+n_ASK/6)*nSim)
-    framerr_rate(ii) = nerr/(nSim);
+    biterr_rate(ii) = sum(nerr_bit)/((nBitsInfo+n_ASK/6)*nSim);
+    framerr_rate(ii) = sum(nerr)/(nSim)
 
 end
+
+figure()
+semilogy(snr,framerr_rate);
+
+%3 bit/s/hz时  误码率为10^-3信噪比在18.6~18.8间
+%3.1 bit/s/hz时  误码率为10^-3信噪比在19.3~19.4间
+%3.2 bit/s/hz时  误码率为10^-3信噪比在20.0~20.1间
+%3.3 bit/s/hz时  误码率为10^-3信噪比在20.8
+%3.4 
