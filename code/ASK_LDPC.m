@@ -92,6 +92,7 @@ for ii = 1:length(snr)
         end
         %随机分布
         %解交织映射
+        llr_I_info_pidemap_Uniform = zeros(n,n_ASK);
         llr_I_info_pidemap_Uniform(bit_map_pi_Uniform,:) = llr_I_Uniform';
         llr_I_ldpc_Uniform = llr_I_info_pidemap_Uniform(:);
         %译码
@@ -106,3 +107,17 @@ for ii = 1:length(snr)
     biterr_rate(ii) = sum(nerr_bit)/(R*LDPC_bitlength*nSim);
     framerr_rate(ii) = sum(nerr)/(nSim)
 end
+%16-ASK
+%3/4码率下10^-3信噪比为20.3DB
+%4/5码率下10^-3信噪比为21.35DB
+%5/6码率下10^-3信噪比为22.2DB
+%8/9码率下10^-3信噪比为23.75DB
+%9/10码率下10^-3信噪比为24.08DB
+
+%32-ASK
+%4/3码率下10^-3信噪比为25.2dB
+%4/5码率下10^-3信噪比为26.5DB
+%5/6码率下10^-3信噪比为27.5DB
+%8/9码率下10^-3信噪比为29.3DB
+%9/10码率下10^-3信噪比为29.625DB
+

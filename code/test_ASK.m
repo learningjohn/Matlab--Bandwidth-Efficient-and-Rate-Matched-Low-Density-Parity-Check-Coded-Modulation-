@@ -5,10 +5,13 @@ M = 32;
 n = log2(M);
 M_ASK = 2^(n);
 R = 5/6;
-nSim = 1000;
+nSim = 2000;
 %编码相关参数
-snr = 18.8;     %信噪比
+snr =22.5;     %信噪比
+
 load('R_SNR.mat');
+best_P = initialize_PX(R_SNR(7,2),M_ASK);
+
 EsN0=10.^(snr/10);
 LDPC_bitlength = 64800; %码长可在648，1296   1944，64800中选择
 
@@ -49,7 +52,7 @@ Gray_table_map_bin = bi2de(Gray_table','left-msb')';
 xx = 1:length(Gray_table_map_bin);
 Gray_table_map(Gray_table_map_bin+1) = xx;
 
-best_P = initialize_PX(R_SNR(1,2)+0.1,M_ASK);
+
 P = @(y,a,d,px) exp(-(y-a).^2./(2*d^2)) *px';
 
 for ii = 1:length(snr) 
@@ -65,7 +68,7 @@ for ii = 1:length(snr)
 %     ldpcDecoder_real = comm.LDPCDecoder(H_real);
     nerr_bit = 0;  
     nerr = 0;
-for k = 1:nSim
+parfor k = 1:nSim
         %信源比特
         txBits_I = randi(2,1,nBitsInfo)-1;
         txBits_other = randi(2,1,n_ASK/6)-1;
@@ -133,8 +136,13 @@ end
 figure()
 semilogy(snr,framerr_rate);
 
-%3 bit/s/hz时  误码率为10^-3信噪比在18.6~18.8间
-%3.1 bit/s/hz时  误码率为10^-3信噪比在19.3~19.4间
-%3.2 bit/s/hz时  误码率为10^-3信噪比在20.0~20.1间
-%3.3 bit/s/hz时  误码率为10^-3信噪比在20.8
-%3.4 
+%3 bit/s/hz时  误码率为10^-3信噪比在18.82dB
+%3.1 bit/s/hz时  误码率为10^-3信噪比在19.37dB
+%3.2 bit/s/hz时  误码率为10^-3信噪比在20.13dB
+%3.3 bit/s/hz时  误码率为10^-3信噪比在20.81
+%3.4 bit/s/hz时  误码率为10^-3信噪比在21.4
+%3.5 bit/s/hz时  误码率为10^-3信噪比在21.97 
+%3.6 bit/s/hz时  误码率为10^-3信噪比在22.6
+%3.7 bit/s/hz时  误码率为10^-3信噪比在23.25
+%3.8 bit/s/hz时  误码率为10^-3信噪比在23.85
+%3.9 bit/s/hz时  误码率为10^-3信噪比在24.5
