@@ -68,7 +68,7 @@ for ii = 1:length(snr)
 %     ldpcDecoder_real = comm.LDPCDecoder(H_real);
     nerr_bit = 0;  
     nerr = 0;
-parfor k = 1:nSim
+for k = 1:nSim
         %信源比特
         txBits_I = randi(2,1,nBitsInfo)-1;
         txBits_other = randi(2,1,n_ASK/6)-1;
@@ -86,6 +86,7 @@ parfor k = 1:nSim
         encData_I_bit = ldpcEncoder(data_I_bit_all);
         sign_symbol_I = encData_I_bit(length(data_I_bit)+1:end)*2-1;
         out_Tx_I = ASK_map(i_TX)'.*sign_symbol_I;
+        
         
         Es = mean(abs(out_Tx_I).^2);
         N=Es./EsN0(ii);
