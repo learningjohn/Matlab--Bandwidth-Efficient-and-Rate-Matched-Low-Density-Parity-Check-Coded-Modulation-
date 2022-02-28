@@ -1,3 +1,4 @@
+%ASK的编码调制方案——PAS
 clc;clear;
 addpath("ccdm\");addpath("Compute_fun\");addpath("mat_data\");
 %初始化一些参数
@@ -9,7 +10,7 @@ nSim = 2000;
 %编码相关参数
 snr =22.5;     %信噪比
 
-load('R_SNR.mat');
+load('R_SNR.mat');%读取整形信号不同信息熵对应信噪比的矩阵
 best_P = initialize_PX(R_SNR(7,2),M_ASK);
 
 EsN0=10.^(snr/10);

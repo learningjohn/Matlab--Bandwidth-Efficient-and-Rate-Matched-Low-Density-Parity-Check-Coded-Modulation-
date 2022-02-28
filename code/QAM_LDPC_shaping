@@ -1,3 +1,4 @@
+%QAM概率成型编码调制方案
 clc;clear;
 addpath("ccdm\");addpath("Compute_fun\");addpath("mat_data\");
 % 初始化一些参数

@@ -4,8 +4,13 @@ function [Px] = initialize_PX(snr,M_ASK)
 %   此处显示详细说明
 filename_bestP = ['snr_bestP_',num2str(M_ASK),'ASK.mat'];
 load(['mat_data/',filename_bestP]);
+if any(snr_Px) == 0 %如果snr_P是空
+    snr_exit = [];
+    Px_exit = [];
+else
 snr_exit = snr_Px(:,1);
 Px_exit = snr_Px(:,2:end);
+end
 ASK_symbol = (-M_ASK+1):2:(M_ASK-1);%ASK星座点
 max_pow = mean(abs(ASK_symbol).^2);
 min_pow = 1;
