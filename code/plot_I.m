@@ -1,3 +1,6 @@
+addpath("Compute_fun\");
+addpath("mat_data\");
+addpath('ccdm\');
 %该函数用来绘制信道容量，均匀分布互信息熵和最优分布互信息熵
 clc;clear;
 M_ASK = [4,8,16,32,64];   %ASK长度
