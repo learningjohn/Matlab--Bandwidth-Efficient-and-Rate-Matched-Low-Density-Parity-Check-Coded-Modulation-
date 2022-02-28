@@ -1,5 +1,5 @@
 function [I] = mutualinfo(px,delta,X)
-%UNTITLED6 此处显示有关此函数的摘要
+%ASK符号的信道互信息熵计算。
 %   此处显示详细说明
 I=0;
 
@@ -17,6 +17,7 @@ for i = 1:length(X)
 
 %     I = I + integral(p_yxi,-inf,inf,'ArrayValued',true);
     I = I + integral(p_yxi,delta*X(i)-abs(10*delta*X(i)),delta*X(i)+abs(10*delta*X(i)),'ArrayValued',true);
+    %由于integral的无穷积分有计算误差，取一个适当的积分区间可以提高精度
 end
 
 end

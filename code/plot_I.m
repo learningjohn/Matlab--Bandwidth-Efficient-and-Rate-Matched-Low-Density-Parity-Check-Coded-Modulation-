@@ -24,9 +24,11 @@ figure()
 hold on;
 plot(snr_dB,C,'--k','LineWidth',2);
 plot(snr_dB,I_mean(1,:),'k','LineWidth',1);
-plot(snr_dB,I_mean(2,:),'k','LineWidth',1);
+plot(snr_dB,I(1,:),'r','LineWidth',1);
 plot(snr_dB,I_mean(3,:),'k','LineWidth',1);
-plot(snr_dB,I_mean(4,:),'k','LineWidth',1);
+plot(snr_dB,I(3,:),'r','LineWidth',1);
 plot(snr_dB,I_mean(5,:),'k','LineWidth',1);
-xlabel('SNR');ylabel('Rate');
-legend('信道容量','平均分布互信息量4-ASK','8-ASK','16-ASK','32-ASK','64-ASK');grid on;
+plot(snr_dB,I(5,:),'r','LineWidth',1);
+xlabel('SNR(dB)');ylabel('Rate(bit/s/hz)');
+legend('信道容量','平均分布互信息量','MB最优分布互信息');grid on;
+hold off;
